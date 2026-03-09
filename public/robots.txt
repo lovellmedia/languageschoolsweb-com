@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://languageschoolsweb.com/sitemap-index.xml

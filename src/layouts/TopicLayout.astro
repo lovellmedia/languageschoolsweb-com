@@ -1,0 +1,110 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import Navigation from '../components/Navigation.astro';
+import ContentSection from '../components/ContentSection.astro';
+import Sidebar from '../components/Sidebar.astro';
+
+export interface Props {
+  title: string;
+  description?: string;
+  topic?: string;
+  pillar?: string;
+  relatedTopics?: Array<{name: string; url: string}>;
+  keyPoints?: string[];
+}
+
+const { 
+  title, 
+  description,
+  topic = "portuguese-variants",
+  pillar = "",
+  relatedTopics = [],
+  keyPoints = []
+} = Astro.props;
+---
+
+<BaseLayout title={title} description={description}>
+  <div class="topic-layout">
+    <div class="container">
+      <Navigation currentTopic={topic} currentPillar={pillar} />
+      
+      <div class="content-grid">
+        <article class="main-content">
+          <header class="page-header">
+            <h1>{title}</h1>
+          </header>
+          <ContentSection>
+            <slot />
+          </ContentSection>
+        </article>
+        
+        <div class="sidebar-container">
+          <Sidebar relatedTopics={relatedTopics} keyPoints={keyPoints} />
+        </div>
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .topic-layout {
+    padding: 2rem 0 4rem;
+  }
+  
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+  }
+  
+  .content-grid {
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    gap: 3rem;
+    align-items: start;
+  }
+  
+  .main-content {
+    min-width: 0;
+  }
+  
+  .page-header {
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 3px solid #004d40;
+  }
+  
+  .page-header h1 {
+    font-size: 2.25rem;
+    font-weight: 800;
+    color: #111827;
+    line-height: 1.2;
+  }
+  
+  .sidebar-container {
+    position: sticky;
+    top: 100px;
+  }
+  
+  @media (max-width: 1024px) {
+    .content-grid {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+    
+    .sidebar-container {
+      position: static;
+      order: -1;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .topic-layout {
+      padding: 1.5rem 0 3rem;
+    }
+    
+    .page-header h1 {
+      font-size: 1.75rem;
+    }
+  }
+</style>

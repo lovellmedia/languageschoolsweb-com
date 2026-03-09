@@ -1,0 +1,154 @@
+---
+const currentYear = new Date().getFullYear();
+const domain = "languageschoolsweb.com";
+---
+
+<footer class="site-footer">
+  <div class="footer-container">
+    <div class="footer-main">
+      <div class="footer-brand">
+        <span class="footer-logo">🌐</span>
+        <span class="footer-name">Language Schools Web</span>
+        <p class="footer-tagline">Your comprehensive resource for Portuguese language studies and the differences between Brazilian and European variants.</p>
+      </div>
+      
+      <div class="footer-sections">
+        <div class="footer-section">
+          <h4>Explore</h4>
+          <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/portuguese-variants/">Overview</a></li>
+            <li><a href="/portuguese-variants/history/">History</a></li>
+            <li><a href="/portuguese-variants/technical-deep-dive/">Technical Deep-Dive</a></li>
+          </ul>
+        </div>
+        
+        <div class="footer-section">
+          <h4>Resources</h4>
+          <ul>
+            <li><a href="/portuguese-variants/ontology/">Ontology</a></li>
+            <li><a href="/portuguese-variants/trends/">Trends</a></li>
+            <li><a href="/portuguese-variants/tools/">Tools</a></li>
+            <li><a href="/portuguese-variants/challenges/">Challenges</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    
+    <div class="footer-bottom">
+      <p>&copy; {currentYear} {domain}. All rights reserved.</p>
+      <p class="footer-credit">Dedicated to Portuguese language education and research.</p>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    background: #f9fafb;
+    border-top: 1px solid #e5e7eb;
+    padding: 3rem 0 1.5rem;
+    margin-top: auto;
+  }
+  
+  .footer-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+  }
+  
+  .footer-main {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 3rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid #e5e7eb;
+  }
+  
+  .footer-brand {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .footer-logo {
+    font-size: 2rem;
+  }
+  
+  .footer-name {
+    font-weight: 700;
+    font-size: 1.125rem;
+    color: #111827;
+  }
+  
+  .footer-tagline {
+    font-size: 0.875rem;
+    color: #6b7280;
+    line-height: 1.5;
+    margin-top: 0.5rem;
+  }
+  
+  .footer-sections {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+  }
+  
+  .footer-section h4 {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #111827;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 1rem;
+  }
+  
+  .footer-section ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .footer-section a {
+    color: #6b7280;
+    text-decoration: none;
+    font-size: 0.875rem;
+    transition: color 0.2s;
+  }
+  
+  .footer-section a:hover {
+    color: #004d40;
+  }
+  
+  .footer-bottom {
+    padding-top: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    text-align: center;
+  }
+  
+  .footer-bottom p {
+    font-size: 0.875rem;
+    color: #6b7280;
+    margin: 0;
+  }
+  
+  .footer-credit {
+    font-size: 0.75rem;
+    color: #9ca3af;
+  }
+  
+  @media (max-width: 768px) {
+    .footer-main {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+    
+    .footer-sections {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

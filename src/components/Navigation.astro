@@ -1,0 +1,142 @@
+---
+export interface Props {
+  currentTopic?: string;
+  currentPillar?: string;
+}
+
+const { currentTopic = "portuguese-variants", currentPillar = "" } = Astro.props;
+
+const pillars = [
+  { name: "Overview", slug: "", path: `/portuguese-variants/` },
+  { name: "History", slug: "history", path: `/portuguese-variants/history/` },
+  { name: "Technical", slug: "technical-deep-dive", path: `/portuguese-variants/technical-deep-dive/` },
+  { name: "Ontology", slug: "ontology", path: `/portuguese-variants/ontology/` },
+  { name: "Trends", slug: "trends", path: `/portuguese-variants/trends/` },
+  { name: "Tools", slug: "tools", path: `/portuguese-variants/tools/` },
+  { name: "Challenges", slug: "challenges", path: `/portuguese-variants/challenges/` },
+];
+
+const currentPillarName = currentPillar || "Overview";
+---
+
+<nav class="breadcrumb-nav" aria-label="Breadcrumb">
+  <ol class="breadcrumb-list">
+    <li class="breadcrumb-item">
+      <a href="/">Home</a>
+    </li>
+    <li class="breadcrumb-separator">/</li>
+    <li class="breadcrumb-item">
+      <a href="/portuguese-variants/">Portuguese Variants</a>
+    </li>
+    {currentPillar && currentPillar !== "Overview" && (
+      <>
+        <li class="breadcrumb-separator">/</li>
+        <li class="breadcrumb-item active" aria-current="page">
+          {currentPillarName}
+        </li>
+      </>
+    )}
+  </ol>
+</nav>
+
+<nav class="pillar-nav" aria-label="Pillar navigation">
+  <h3 class="pillar-nav-title">In This Section</h3>
+  <ul class="pillar-nav-list">
+    {pillars.map((pillar) => (
+      <li class="pillar-nav-item">
+        <a 
+          href={pillar.path} 
+          class={currentPillarName === pillar.name ? "active" : ""}
+          aria-current={currentPillarName === pillar.name ? "page" : undefined}
+        >
+          {pillar.name}
+        </a>
+      </li>
+    ))}
+  </ul>
+</nav>
+
+<style>
+  .breadcrumb-nav {
+    margin-bottom: 1.5rem;
+  }
+  
+  .breadcrumb-list {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    font-size: 0.875rem;
+  }
+  
+  .breadcrumb-item a {
+    color: #6b7280;
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  
+  .breadcrumb-item a:hover {
+    color: #004d40;
+    text-decoration: underline;
+  }
+  
+  .breadcrumb-item.active {
+    color: #111827;
+    font-weight: 500;
+  }
+  
+  .breadcrumb-separator {
+    color: #d1d5db;
+  }
+  
+  .pillar-nav {
+    background: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.5rem;
+    padding: 1.25rem;
+    margin-bottom: 2rem;
+  }
+  
+  .pillar-nav-title {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #6b7280;
+    margin: 0 0 0.75rem 0;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #e5e7eb;
+  }
+  
+  .pillar-nav-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+  
+  .pillar-nav-item a {
+    display: block;
+    padding: 0.5rem 0.75rem;
+    color: #4b5563;
+    text-decoration: none;
+    font-size: 0.875rem;
+    border-radius: 0.375rem;
+    transition: all 0.2s;
+  }
+  
+  .pillar-nav-item a:hover {
+    background: #fff;
+    color: #004d40;
+  }
+  
+  .pillar-nav-item a.active {
+    background: #004d40;
+    color: #fff;
+    font-weight: 500;
+  }
+</style>
