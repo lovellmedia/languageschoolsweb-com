@@ -1,0 +1,90 @@
+---
+import TopicLayout from '../../layouts/TopicLayout.astro';
+
+const title = "Tools & Resources for Portuguese Variant Comparison";
+const description = "Interactive tools and practical resources for comparing Brazilian and European Portuguese. Access vocabulary translators, text analyzers, and learning materials.";
+
+const relatedTopics = [
+  { name: "Overview", url: "/portuguese-variants/" },
+  { name: "History & Evolution", url: "/portuguese-variants/history/" },
+  { name: "Technical Deep-Dive", url: "/portuguese-variants/technical-deep-dive/" },
+  { name: "Ontology & Knowledge Base", url: "/portuguese-variants/ontology/" },
+  { name: "Current Trends", url: "/portuguese-variants/trends/" },
+  { name: "Challenges & Solutions", url: "/portuguese-variants/challenges/" }
+];
+
+const keyPoints = [
+  "Interactive vocabulary translator between variants",
+  "Progressive tense converter tool",
+  "Text variant analyzer identifies regional features",
+  "Comprehensive resource directory"
+];
+---
+
+<TopicLayout 
+  title={title} 
+  description={description}
+  topic="portuguese-variants"
+  pillar="Tools"
+  relatedTopics={relatedTopics}
+  keyPoints={keyPoints}
+>
+  <p>This section provides practical tools and resources for navigating between Brazilian and European Portuguese. Whether you're a learner deciding which variant to study, a translator converting content between variants, or a professional communicating across Lusophone contexts, these resources offer concrete assistance.</p>
+
+  <h2>Interactive Tools</h2>
+
+  <h3><a href="/portuguese-variants/tools/vocabulary-translator/">Vocabulary Translator</a></h3>
+  <p>Convert words between Brazilian and European Portuguese variants. Enter a term in one variant, and the tool provides the equivalent in the other variant, with notes on register, frequency, and context.</p>
+  <p><strong>Example conversions:</strong></p>
+  <ul>
+    <li>BR <em>ônibus</em> ↔ EP <em>autocarro</em> (bus)</li>
+    <li>BR <em>celular</em> ↔ EP <em>telemóvel</em> (cell phone)</li>
+    <li>BR <em>sorvete</em> ↔ EP <em>gelado</em> (ice cream)</li>
+  </ul>
+
+  <h3><a href="/portuguese-variants/tools/progressive-converter/">Progressive Tense Converter</a></h3>
+  <p>Transform sentences between the Brazilian gerund construction (<em>estou falando</em>) and the European infinitive construction (<em>estou a falar</em>).</p>
+
+  <h3><a href="/portuguese-variants/tools/text-analyzer/">Text Variant Analyzer</a></h3>
+  <p>Examine Portuguese text and identify features suggesting Brazilian or European origin. The analyzer detects vocabulary markers, progressive tense constructions, clitic pronoun placement patterns, and possessive adjective position.</p>
+
+  <h2>Learning Resources by Variant</h2>
+
+  <h3>Brazilian Portuguese Resources</h3>
+  <ul>
+    <li><a href="https://www.dicio.com.br/" target="_blank" rel="noopener noreferrer">Dicio</a> - Comprehensive Brazilian Portuguese dictionary</li>
+    <li><a href="https://www.celpabras.org.br/" target="_blank" rel="noopener noreferrer">CELPE-Bras</a> - Official Brazilian Portuguese proficiency exam</li>
+    <li><a href="https://g1.globo.com/" target="_blank" rel="noopener noreferrer">G1</a> - Major Brazilian news portal</li>
+    <li><a href="https://www.folha.uol.com.br/" target="_blank" rel="noopener noreferrer">Folha de S.Paulo</a> - Influential Brazilian newspaper</li>
+  </ul>
+
+  <h3>European Portuguese Resources</h3>
+  <ul>
+    <li><a href="https://dicionario.priberam.org/" target="_blank" rel="noopener noreferrer">Priberam</a> - Premier European Portuguese dictionary</li>
+    <li><a href="https://www.caple.letras.ulisboa.pt/" target="_blank" rel="noopener noreferrer">CAPLE</a> - Official Portuguese proficiency certification</li>
+    <li><a href="https://www.instituto-camoes.pt/" target="_blank" rel="noopener noreferrer">Instituto Camões</a> - Portuguese language promotion worldwide</li>
+    <li><a href="https://www.rtp.pt/" target="_blank" rel="noopener noreferrer">RTP</a> - Portuguese public broadcasting</li>
+  </ul>
+
+  <h2>Corpus and Research Resources</h2>
+  <ul>
+    <li><a href="https://www.corpusdoportugues.org/" target="_blank" rel="noopener noreferrer">Corpus do Português</a> - Large searchable corpus with variant marking</li>
+    <li><a href="https://www.linguateca.pt/" target="_blank" rel="noopener noreferrer">Linguateca</a> - Portuguese language technology resources</li>
+    <li><a href="https://ciberduvidas.iscte-iul.pt/" target="_blank" rel="noopener noreferrer">Ciberdúvidas da Língua Portuguesa</a> - Authoritative Portuguese language Q&A</li>
+  </ul>
+
+  <h2>Mobile Applications</h2>
+  <ul>
+    <li><strong>Duolingo:</strong> Primarily teaches Brazilian Portuguese</li>
+    <li><strong>Babbel:</strong> Offers separate Brazilian and European Portuguese courses</li>
+    <li><strong>Busuu:</strong> Provides variant-specific learning paths</li>
+    <li><strong>Priberam:</strong> European Portuguese dictionary app</li>
+  </ul>
+
+  <h2>Print Resources</h2>
+  <ul>
+    <li>Bechara, Evanildo. <em>Moderna Gramática Portuguesa</em> (Brazilian perspective)</li>
+    <li>Cegalla, Domingos Paschoal. <em>Novíssima Gramática da Língua Portuguesa</em></li>
+    <li>Ackerlind, Sheila et al. <em>Portuguese: A Reference Manual</em> (covers both variants)</li>
+  </ul>
+</TopicLayout>

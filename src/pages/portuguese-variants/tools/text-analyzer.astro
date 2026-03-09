@@ -1,0 +1,276 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+
+const title = "Text Variant Analyzer - Brazilian vs European Portuguese";
+const description = "Analyze Portuguese text to identify features suggesting Brazilian or European origin. Detect vocabulary, grammar, and stylistic patterns.";
+---
+
+<BaseLayout title={title} description={description}>
+  <div class="tool-page">
+    <div class="container">
+      <nav class="breadcrumb">
+        <a href="/">Home</a> / 
+        <a href="/portuguese-variants/">Portuguese Variants</a> / 
+        <a href="/portuguese-variants/tools/">Tools</a> / 
+        <span>Text Analyzer</span>
+      </nav>
+
+      <header class="tool-header">
+        <h1>Text Variant Analyzer</h1>
+        <p class="tool-description">Paste Portuguese text to analyze features indicating Brazilian or European Portuguese.</p>
+      </header>
+
+      <div class="analyzer-container">
+        <div class="input-section">
+          <label for="inputText">Enter Portuguese text to analyze:</label>
+          <textarea id="inputText" rows="6" placeholder="Paste Portuguese text here (at least 2-3 sentences for best results)...&#10;&#10;Example: Estou falando com meu amigo sobre o ônibus que ele pegou ontem."></textarea>
+          <button id="analyzeBtn" class="analyze-btn">Analyze Text</button>
+        </div>
+
+        <div id="resultsSection" class="results-section hidden">
+          <div class="summary-box">
+            <div class="verdict" id="verdict"></div>
+            <div class="confidence" id="confidence"></div>
+          </div>
+
+          <div class="findings">
+            <h3>Detected Features</h3>
+            <div id="findingsList" class="findings-list"></div>
+          </div>
+        </div>
+
+        <div class="info-section">
+          <h3>What This Analyzer Detects</h3>
+          <div class="features-grid">
+            <div class="feature-card">
+              <h4>Vocabulary Markers</h4>
+              <p>Words like ônibus/autocarro, celular/telemóvel, sorvete/gelado that strongly indicate one variant</p>
+            </div>
+            <div class="feature-card">
+              <h4>Progressive Constructions</h4>
+              <p>Gerund forms (-ndo) typical of Brazilian vs. infinitive with "a" typical of European Portuguese</p>
+            </div>
+            <div class="feature-card">
+              <h4>Pronoun Placement</h4>
+              <p>Clitic pronoun position patterns that differ between variants</p>
+            </div>
+            <div class="feature-card">
+              <h4>Possessive Position</h4>
+              <p>Pre-nominal possessives (Brazilian) vs. post-nominal (European)</p>
+            </div>
+          </div>
+          
+          <div class="limitations">
+            <h4>Limitations</h4>
+            <p>This analyzer provides educated guesses based on linguistic features, not definitive identification. Skilled writers can produce text in either variant regardless of origin. Results are most reliable with longer texts (100+ words) containing multiple diagnostic features.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="tool-navigation">
+        <a href="/portuguese-variants/tools/" class="back-link">← Back to Tools</a>
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<script is:inline>
+  const markers = {
+    br: {
+      vocabulary: ['onibus', 'celular', 'sorvete', 'trem', 'banheiro', 'suco', 'geladeira', 'shopping', 'mouse', 'site'],
+      patterns: [
+        { name: 'Gerund progressive', regex: /\b(estou|está|estamos|estão|estava)\s+\w+ndo\b/gi, weight: 2 },
+        { name: 'Pre-nominal possessive', regex: /\b(meus?|teus?|seus?|nossos?|vossos?)\s+\w+/gi, weight: 1 },
+        { name: 'Você address', regex: /\bvocê\b/gi, weight: 0.5 }
+      ]
+    },
+    ep: {
+      vocabulary: ['autocarro', 'telemovel', 'gelado', 'comboio', 'casa de banho', 'sumo', 'frigorifico', 'centro comercial', 'rato', 'sitio'],
+      patterns: [
+        { name: 'Infinitive progressive', regex: /\b(estou|está|estamos|estão|estava)\s+a\s+\w+r\b/gi, weight: 2 },
+        { name: 'Post-nominal possessive', regex: /\b\w+\s+(meu|teu|seu|nosso|vosso)\b/gi, weight: 1.5 },
+        { name: 'Tu address', regex: /\btu\s+\w+as\b/gi, weight: 2 }
+      ]
+    }
+  };
+
+  function normalizeText(text) {
+    return text.toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '');
+  }
+
+  function analyzeText(text) {
+    const normalizedText = normalizeText(text);
+    const findings = [];
+    let brScore = 0;
+    let epScore = 0;
+
+    // Check vocabulary markers
+    markers.br.vocabulary.forEach(word => {
+      const regex = new RegExp(`\\b${word}\\b`, 'gi');
+      const matches = normalizedText.match(regex);
+      if (matches) {
+        findings.push({
+          type: 'br',
+          category: 'Vocabulary',
+          feature: `"${word}" - Brazilian Portuguese term`,
+          weight: 1.5
+        });
+        brScore += 1.5;
+      }
+    });
+
+    markers.ep.vocabulary.forEach(word => {
+      const regex = new RegExp(`\\b${word}\\b`, 'gi');
+      const matches = normalizedText.match(regex);
+      if (matches) {
+        findings.push({
+          type: 'ep',
+          category: 'Vocabulary',
+          feature: `"${word}" - European Portuguese term`,
+          weight: 1.5
+        });
+        epScore += 1.5;
+      }
+    });
+
+    // Check pattern markers
+    markers.br.patterns.forEach(pattern => {
+      const matches = text.match(pattern.regex);
+      if (matches) {
+        findings.push({
+          type: 'br',
+          category: 'Grammar',
+          feature: `${pattern.name} (${matches.length} instance${matches.length > 1 ? 's' : ''})`,
+          weight: pattern.weight
+        });
+        brScore += pattern.weight * matches.length;
+      }
+    });
+
+    markers.ep.patterns.forEach(pattern => {
+      const matches = text.match(pattern.regex);
+      if (matches) {
+        findings.push({
+          type: 'ep',
+          category: 'Grammar',
+          feature: `${pattern.name} (${matches.length} instance${matches.length > 1 ? 's' : ''})`,
+          weight: pattern.weight
+        });
+        epScore += pattern.weight * matches.length;
+      }
+    });
+
+    return { findings, brScore, epScore };
+  }
+
+  document.addEventListener('DOMContentLoaded', function() {
+    const inputText = document.getElementById('inputText');
+    const analyzeBtn = document.getElementById('analyzeBtn');
+    const resultsSection = document.getElementById('resultsSection');
+    const verdict = document.getElementById('verdict');
+    const confidence = document.getElementById('confidence');
+    const findingsList = document.getElementById('findingsList');
+
+    analyzeBtn.addEventListener('click', function() {
+      const text = inputText.value.trim();
+      if (!text || text.length < 20) {
+        alert('Please enter at least 20 characters of text for meaningful analysis');
+        return;
+      }
+
+      const { findings, brScore, epScore } = analyzeText(text);
+      const totalScore = brScore + epScore;
+
+      // Determine verdict
+      let verdictText, verdictClass;
+      if (totalScore === 0) {
+        verdictText = 'Insufficient markers detected';
+        verdictClass = 'neutral';
+      } else if (brScore > epScore * 1.5) {
+        verdictText = 'Likely Brazilian Portuguese';
+        verdictClass = 'br';
+      } else if (epScore > brScore * 1.5) {
+        verdictText = 'Likely European Portuguese';
+        verdictClass = 'ep';
+      } else {
+        verdictText = 'Mixed or Neutral features';
+        verdictClass = 'mixed';
+      }
+
+      // Calculate confidence
+      const confidencePercent = totalScore > 0 ? Math.round(Math.max(brScore, epScore) / totalScore * 100) : 0;
+
+      verdict.textContent = verdictText;
+      verdict.className = 'verdict ' + verdictClass;
+      confidence.textContent = `Confidence: ${confidencePercent}% (based on ${findings.length} detected feature${findings.length !== 1 ? 's' : ''})`;
+
+      // Display findings
+      if (findings.length > 0) {
+        findingsList.innerHTML = findings.map(f => `
+          <div class="finding-item ${f.type}">
+            <span class="badge">${f.type === 'br' ? 'BR' : 'EP'}</span>
+            <span class="category">${f.category}:</span>
+            <span class="feature">${f.feature}</span>
+          </div>
+        `).join('');
+      } else {
+        findingsList.innerHTML = '<p class="no-findings">No clear variant markers detected. Try using longer text with more specific vocabulary.</p>';
+      }
+
+      resultsSection.classList.remove('hidden');
+      resultsSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    });
+  });
+</script>
+
+<style>
+  .tool-page { padding: 2rem 0 4rem; background: #f9fafb; min-height: calc(100vh - 200px); }
+  .container { max-width: 800px; margin: 0 auto; padding: 0 1.5rem; }
+  .breadcrumb { font-size: 0.875rem; color: #6b7280; margin-bottom: 1.5rem; }
+  .breadcrumb a { color: #004d40; text-decoration: none; }
+  .breadcrumb a:hover { text-decoration: underline; }
+  .tool-header { text-align: center; margin-bottom: 2rem; }
+  .tool-header h1 { font-size: 2rem; color: #111827; margin-bottom: 0.5rem; }
+  .tool-description { color: #6b7280; font-size: 1.125rem; }
+  .analyzer-container { background: white; border-radius: 0.75rem; padding: 2rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+  .input-section { margin-bottom: 1.5rem; }
+  .input-section label { display: block; font-weight: 600; color: #374151; margin-bottom: 0.5rem; }
+  .input-section textarea { width: 100%; padding: 1rem; border: 2px solid #e5e7eb; border-radius: 0.5rem; font-size: 1rem; font-family: inherit; resize: vertical; }
+  .input-section textarea:focus { outline: none; border-color: #004d40; }
+  .analyze-btn { display: block; width: 100%; margin-top: 1rem; padding: 1rem; background: #004d40; color: white; border: none; border-radius: 0.5rem; font-size: 1.125rem; font-weight: 600; cursor: pointer; transition: background 0.2s; }
+  .analyze-btn:hover { background: #00695c; }
+  .results-section { margin: 2rem 0; padding: 1.5rem; background: #f9fafb; border-radius: 0.5rem; }
+  .hidden { display: none; }
+  .summary-box { text-align: center; padding: 1.5rem; background: white; border-radius: 0.5rem; margin-bottom: 1.5rem; }
+  .verdict { font-size: 1.5rem; font-weight: 700; margin-bottom: 0.5rem; }
+  .verdict.br { color: #059669; }
+  .verdict.ep { color: #0369a1; }
+  .verdict.mixed { color: #d97706; }
+  .verdict.neutral { color: #6b7280; }
+  .confidence { color: #6b7280; font-size: 0.9375rem; }
+  .findings h3 { font-size: 1.125rem; color: #111827; margin-bottom: 1rem; }
+  .findings-list { display: flex; flex-direction: column; gap: 0.5rem; }
+  .finding-item { display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem; background: white; border-radius: 0.375rem; border-left: 3px solid; }
+  .finding-item.br { border-left-color: #059669; }
+  .finding-item.ep { border-left-color: #0369a1; }
+  .badge { display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 50%; font-size: 0.75rem; font-weight: 700; color: white; }
+  .finding-item.br .badge { background: #059669; }
+  .finding-item.ep .badge { background: #0369a1; }
+  .category { font-weight: 600; color: #374151; }
+  .feature { color: #4b5563; }
+  .no-findings { text-align: center; color: #6b7280; font-style: italic; padding: 1rem; }
+  .info-section { margin-top: 2rem; padding-top: 2rem; border-top: 2px solid #e5e7eb; }
+  .info-section h3 { font-size: 1.25rem; color: #111827; margin-bottom: 1rem; }
+  .features-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1.5rem; }
+  .feature-card { padding: 1rem; background: #f9fafb; border-radius: 0.5rem; }
+  .feature-card h4 { font-size: 1rem; color: #111827; margin-bottom: 0.5rem; }
+  .feature-card p { font-size: 0.875rem; color: #6b7280; line-height: 1.5; }
+  .limitations { padding: 1rem; background: #fffbeb; border-left: 4px solid #f59e0b; border-radius: 0.375rem; }
+  .limitations h4 { font-size: 1rem; color: #92400e; margin-bottom: 0.5rem; }
+  .limitations p { font-size: 0.875rem; color: #92400e; line-height: 1.5; }
+  .tool-navigation { margin-top: 2rem; text-align: center; }
+  .back-link { color: #004d40; text-decoration: none; font-weight: 500; }
+  .back-link:hover { text-decoration: underline; }
+</style>

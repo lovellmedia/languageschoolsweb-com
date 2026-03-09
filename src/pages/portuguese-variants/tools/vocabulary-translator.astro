@@ -1,0 +1,255 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+
+const title = "Vocabulary Translator - Brazilian vs European Portuguese";
+const description = "Interactive tool to translate vocabulary between Brazilian and European Portuguese variants. Find equivalent terms and learn regional differences.";
+---
+
+<BaseLayout title={title} description={description}>
+  <div class="tool-page">
+    <div class="container">
+      <nav class="breadcrumb">
+        <a href="/">Home</a> / 
+        <a href="/portuguese-variants/">Portuguese Variants</a> / 
+        <a href="/portuguese-variants/tools/">Tools</a> / 
+        <span>Vocabulary Translator</span>
+      </nav>
+
+      <header class="tool-header">
+        <h1>Vocabulary Translator</h1>
+        <p class="tool-description">Translate words between Brazilian and European Portuguese variants.</p>
+      </header>
+
+      <div class="translator-container">
+        <div class="direction-toggle">
+          <button id="brToEp" class="direction-btn active">Brazilian → European</button>
+          <button id="epToBr" class="direction-btn">European → Brazilian</button>
+        </div>
+
+        <div class="search-box">
+          <input type="text" id="searchInput" placeholder="Type a word to translate (e.g., onibus, trem, celular)..." />
+          <button id="searchBtn">Translate</button>
+        </div>
+
+        <div id="results" class="results-container">
+          <p class="intro-text">Enter a word above to see the translation between Brazilian and European Portuguese.</p>
+        </div>
+
+        <div class="common-terms">
+          <h3>Common Translations</h3>
+          <div class="terms-list">
+            <div class="term-row">
+              <span class="br">ônibus</span>
+              <span class="arrow">→</span>
+              <span class="ep">autocarro</span>
+              <span class="en">bus</span>
+            </div>
+            <div class="term-row">
+              <span class="br">celular</span>
+              <span class="arrow">→</span>
+              <span class="ep">telemóvel</span>
+              <span class="en">cell phone</span>
+            </div>
+            <div class="term-row">
+              <span class="br">sorvete</span>
+              <span class="arrow">→</span>
+              <span class="ep">gelado</span>
+              <span class="en">ice cream</span>
+            </div>
+            <div class="term-row">
+              <span class="br">trem</span>
+              <span class="arrow">→</span>
+              <span class="ep">comboio</span>
+              <span class="en">train</span>
+            </div>
+            <div class="term-row">
+              <span class="br">banheiro</span>
+              <span class="arrow">→</span>
+              <span class="ep">casa de banho</span>
+              <span class="en">bathroom</span>
+            </div>
+            <div class="term-row">
+              <span class="br">suco</span>
+              <span class="arrow">→</span>
+              <span class="ep">sumo</span>
+              <span class="en">juice</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tool-navigation">
+        <a href="/portuguese-variants/tools/" class="back-link">← Back to Tools</a>
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<script is:inline>
+  const vocabularyDB = [
+    { br: "onibus", ep: "autocarro", en: "bus" },
+    { br: "trem", ep: "comboio", en: "train" },
+    { br: "metro", ep: "metro", en: "subway" },
+    { br: "celular", ep: "telemovel", en: "cell phone" },
+    { br: "computador", ep: "computador", en: "computer" },
+    { br: "mouse", ep: "rato", en: "mouse" },
+    { br: "tela", ep: "ecra", en: "screen" },
+    { br: "sorvete", ep: "gelado", en: "ice cream" },
+    { br: "suco", ep: "sumo", en: "juice" },
+    { br: "cafe da manha", ep: "pequeno almoco", en: "breakfast" },
+    { br: "banheiro", ep: "casa de banho", en: "bathroom" },
+    { br: "geladeira", ep: "frigorifico", en: "refrigerator" },
+    { br: "posto de gasolina", ep: "bomba de gasolina", en: "gas station" },
+    { br: "carteira de motorista", ep: "carta de conducao", en: "driver's license" },
+    { br: "shopping", ep: "centro comercial", en: "shopping mall" },
+    { br: "academia", ep: "ginasio", en: "gym" },
+    { br: "fila", ep: "bicha", en: "line/queue" },
+    { br: "calcinha", ep: "cuecas", en: "underwear" },
+    { br: "site", ep: "sitio", en: "website" },
+    { br: "senha", ep: "palavra-passe", en: "password" },
+    { br: "arquivo", ep: "ficheiro", en: "file" },
+    { br: "teclado", ep: "teclado", en: "keyboard" }
+  ];
+
+  let currentDirection = 'brToEp';
+
+  function normalizeText(text) {
+    return text.toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^a-z0-9\s]/g, '');
+  }
+
+  function searchVocabulary(query) {
+    const normalizedQuery = normalizeText(query);
+    return vocabularyDB.filter(item => 
+      normalizeText(item.br).includes(normalizedQuery) ||
+      normalizeText(item.ep).includes(normalizedQuery) ||
+      normalizeText(item.en).includes(normalizedQuery)
+    );
+  }
+
+  function displayResults(results) {
+    const resultsContainer = document.getElementById('results');
+    
+    if (results.length === 0) {
+      resultsContainer.innerHTML = '<p class="no-results">No translation found. Try searching for: onibus, celular, sorvete, banheiro, trem, etc.</p>';
+      return;
+    }
+
+    const sourceLabel = currentDirection === 'brToEp' ? 'Brazilian' : 'European';
+    const targetLabel = currentDirection === 'brToEp' ? 'European' : 'Brazilian';
+    
+    let html = '<div class="results-list">';
+    results.forEach(item => {
+      const source = currentDirection === 'brToEp' ? item.br : item.ep;
+      const target = currentDirection === 'brToEp' ? item.ep : item.br;
+      html += `
+        <div class="result-item">
+          <div class="term-box">
+            <span class="label">${sourceLabel}</span>
+            <span class="word">${source}</span>
+          </div>
+          <div class="arrow-box">→</div>
+          <div class="term-box">
+            <span class="label">${targetLabel}</span>
+            <span class="word">${target}</span>
+          </div>
+          <div class="english">${item.en}</div>
+        </div>
+      `;
+    });
+    html += '</div>';
+    
+    resultsContainer.innerHTML = html;
+  }
+
+  document.addEventListener('DOMContentLoaded', function() {
+    const brToEpBtn = document.getElementById('brToEp');
+    const epToBrBtn = document.getElementById('epToBr');
+    const searchInput = document.getElementById('searchInput');
+    const searchBtn = document.getElementById('searchBtn');
+
+    brToEpBtn.addEventListener('click', function() {
+      currentDirection = 'brToEp';
+      brToEpBtn.classList.add('active');
+      epToBrBtn.classList.remove('active');
+      if (searchInput.value.trim()) {
+        displayResults(searchVocabulary(searchInput.value));
+      }
+    });
+
+    epToBrBtn.addEventListener('click', function() {
+      currentDirection = 'epToBr';
+      epToBrBtn.classList.add('active');
+      brToEpBtn.classList.remove('active');
+      if (searchInput.value.trim()) {
+        displayResults(searchVocabulary(searchInput.value));
+      }
+    });
+
+    searchBtn.addEventListener('click', function() {
+      const query = searchInput.value.trim();
+      if (query) {
+        const results = searchVocabulary(query);
+        displayResults(results);
+      }
+    });
+
+    searchInput.addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        searchBtn.click();
+      }
+    });
+  });
+</script>
+
+<style>
+  .tool-page { padding: 2rem 0 4rem; background: #f9fafb; min-height: calc(100vh - 200px); }
+  .container { max-width: 800px; margin: 0 auto; padding: 0 1.5rem; }
+  .breadcrumb { font-size: 0.875rem; color: #6b7280; margin-bottom: 1.5rem; }
+  .breadcrumb a { color: #004d40; text-decoration: none; }
+  .breadcrumb a:hover { text-decoration: underline; }
+  .tool-header { text-align: center; margin-bottom: 2rem; }
+  .tool-header h1 { font-size: 2rem; color: #111827; margin-bottom: 0.5rem; }
+  .tool-description { color: #6b7280; font-size: 1.125rem; }
+  .translator-container { background: white; border-radius: 0.75rem; padding: 2rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+  .direction-toggle { display: flex; gap: 0.5rem; margin-bottom: 1.5rem; justify-content: center; }
+  .direction-btn { padding: 0.75rem 1.5rem; border: 2px solid #e5e7eb; background: white; border-radius: 0.5rem; cursor: pointer; font-weight: 500; transition: all 0.2s; }
+  .direction-btn.active { background: #004d40; color: white; border-color: #004d40; }
+  .direction-btn:hover:not(.active) { border-color: #004d40; color: #004d40; }
+  .search-box { display: flex; gap: 0.75rem; margin-bottom: 1.5rem; }
+  .search-box input { flex: 1; padding: 0.875rem 1rem; border: 2px solid #e5e7eb; border-radius: 0.5rem; font-size: 1rem; }
+  .search-box input:focus { outline: none; border-color: #004d40; }
+  .search-box button { padding: 0.875rem 1.5rem; background: #004d40; color: white; border: none; border-radius: 0.5rem; font-weight: 600; cursor: pointer; }
+  .search-box button:hover { background: #00695c; }
+  .results-container { min-height: 80px; margin-bottom: 2rem; }
+  .intro-text { text-align: center; color: #6b7280; padding: 1.5rem; background: #f9fafb; border-radius: 0.5rem; }
+  .no-results { text-align: center; color: #6b7280; padding: 1.5rem; font-style: italic; }
+  .results-list { display: flex; flex-direction: column; gap: 0.75rem; }
+  .result-item { display: grid; grid-template-columns: 1fr auto 1fr; gap: 1rem; align-items: center; padding: 1rem; background: #f9fafb; border-radius: 0.5rem; border-left: 4px solid #004d40; }
+  .term-box { display: flex; flex-direction: column; gap: 0.25rem; }
+  .label { font-size: 0.75rem; text-transform: uppercase; color: #6b7280; font-weight: 600; }
+  .word { font-size: 1.25rem; font-weight: 600; color: #111827; }
+  .arrow-box { font-size: 1.5rem; color: #004d40; font-weight: bold; }
+  .english { grid-column: 1 / -1; color: #374151; font-size: 0.9375rem; padding-top: 0.5rem; border-top: 1px solid #e5e7eb; }
+  .common-terms { margin-top: 2rem; padding-top: 2rem; border-top: 2px solid #e5e7eb; }
+  .common-terms h3 { font-size: 1.25rem; color: #111827; margin-bottom: 1rem; }
+  .terms-list { display: flex; flex-direction: column; gap: 0.5rem; }
+  .term-row { display: grid; grid-template-columns: 1fr auto 1fr 1fr; gap: 1rem; align-items: center; padding: 0.75rem; background: #f9fafb; border-radius: 0.375rem; font-size: 0.9375rem; }
+  .term-row .br, .term-row .ep { font-weight: 600; color: #111827; }
+  .term-row .arrow { color: #9ca3af; }
+  .term-row .en { color: #6b7280; font-style: italic; }
+  .tool-navigation { margin-top: 2rem; text-align: center; }
+  .back-link { color: #004d40; text-decoration: none; font-weight: 500; }
+  .back-link:hover { text-decoration: underline; }
+  @media (max-width: 640px) {
+    .result-item { grid-template-columns: 1fr; gap: 0.5rem; text-align: center; }
+    .result-item .arrow-box { transform: rotate(90deg); }
+    .term-row { grid-template-columns: 1fr 1fr; gap: 0.5rem; }
+    .term-row .arrow { display: none; }
+    .term-row .en { grid-column: 1 / -1; }
+    .direction-toggle { flex-direction: column; }
+    .search-box { flex-direction: column; }
+  }
+</style>

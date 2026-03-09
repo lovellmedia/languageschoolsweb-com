@@ -1,0 +1,94 @@
+---
+import TopicLayout from '../../layouts/TopicLayout.astro';
+
+const title = "Ontology & Knowledge Base: Portuguese Language Structure";
+const description = "Comprehensive glossary, taxonomies, and structured knowledge resources for Brazilian and European Portuguese.";
+
+const relatedTopics = [
+  { name: "Overview", url: "/portuguese-variants/" },
+  { name: "History & Evolution", url: "/portuguese-variants/history/" },
+  { name: "Technical Deep-Dive", url: "/portuguese-variants/technical-deep-dive/" },
+  { name: "Current Trends", url: "/portuguese-variants/trends/" },
+  { name: "Tools & Resources", url: "/portuguese-variants/tools/" },
+  { name: "Challenges & Solutions", url: "/portuguese-variants/challenges/" }
+];
+
+const keyPoints = [
+  "Comprehensive vocabulary comparison across major semantic domains",
+  "Grammatical feature matrices documenting variant differences",
+  "Phonological inventory comparison charts",
+  "Register and formality classification system"
+];
+---
+
+<TopicLayout 
+  title={title} 
+  description={description}
+  topic="portuguese-variants"
+  pillar="Ontology"
+  relatedTopics={relatedTopics}
+  keyPoints={keyPoints}
+>
+  <p>This knowledge base provides structured, systematic documentation of Brazilian and European Portuguese linguistic systems. Organized for reference, research, and practical application, these resources support translators, linguists, educators, and advanced learners.</p>
+
+  <h2>Comprehensive Vocabulary Taxonomy</h2>
+
+  <h3>Transportation and Infrastructure</h3>
+  <table>
+    <thead><tr><th>Concept</th><th>Brazilian</th><th>European</th></tr></thead>
+    <tbody>
+      <tr><td>Bus</td><td>ônibus</td><td>autocarro</td></tr>
+      <tr><td>Train</td><td>trem</td><td>comboio</td></tr>
+      <tr><td>Subway</td><td>metrô</td><td>metro</td></tr>
+      <tr><td>Driver's license</td><td>carteira de motorista</td><td>carta de condução</td></tr>
+      <tr><td>Gas station</td><td>posto de gasolina</td><td>bomba de gasolina</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Food and Dining</h3>
+  <table>
+    <thead><tr><th>Concept</th><th>Brazilian</th><th>European</th></tr></thead>
+    <tbody>
+      <tr><td>Breakfast</td><td>café da manhã</td><td>pequeno-almoço</td></tr>
+      <tr><td>Ice cream</td><td>sorvete</td><td>gelado</td></tr>
+      <tr><td>Juice</td><td>suco</td><td>sumo</td></tr>
+      <tr><td>Avocado</td><td>abacate</td><td>abacate</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Technology</h3>
+  <table>
+    <thead><tr><th>Concept</th><th>Brazilian</th><th>European</th></tr></thead>
+    <tbody>
+      <tr><td>Cell phone</td><td>celular</td><td>telemóvel</td></tr>
+      <tr><td>Computer</td><td>computador</td><td>computador</td></tr>
+      <tr><td>Screen</td><td>tela</td><td>ecrã</td></tr>
+      <tr><td>Mouse</td><td>mouse</td><td>rato</td></tr>
+      <tr><td>Password</td><td>senha</td><td>palavra-passe</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Grammatical Feature Matrix</h2>
+  <table>
+    <thead><tr><th>Feature</th><th>Brazilian Portuguese</th><th>European Portuguese</th></tr></thead>
+    <tbody>
+      <tr><td>Progressive formation</td><td>estar + gerund</td><td>estar a + infinitive</td></tr>
+      <tr><td>Clitic pronoun placement</td><td>Proclisis generalized</td><td>Enclisis in V1 contexts</td></tr>
+      <tr><td>2nd person address</td><td>Você generalized</td><td>Tu/Você distinction maintained</td></tr>
+      <tr><td>Possessive position</td><td>Pre-nominal preferred</td><td>Post-nominal preferred</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Phonological Comparison</h2>
+  <p>European Portuguese exhibits extensive vowel reduction in unstressed syllables, while Brazilian Portuguese maintains fuller vowel qualities. Final /s/ becomes [ʃ] in European Portuguese but remains [s] in Brazilian Portuguese.</p>
+
+  <h2>Register Classification</h2>
+  <table>
+    <thead><tr><th>Level</th><th>Brazilian</th><th>European</th></tr></thead>
+    <tbody>
+      <tr><td>Intimate</td><td>Você; informal vocabulary</td><td>Tu; highly reduced speech</td></tr>
+      <tr><td>Formal</td><td>Você; careful articulation</td><td>O senhor/a senhora</td></tr>
+      <tr><td>Ceremonial</td><td>Formal address</td><td>Third-person address</td></tr>
+    </tbody>
+  </table>
+</TopicLayout>

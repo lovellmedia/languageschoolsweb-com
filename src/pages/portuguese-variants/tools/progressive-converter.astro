@@ -1,0 +1,263 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+
+const title = "Progressive Tense Converter - Brazilian vs European Portuguese";
+const description = "Convert sentences between Brazilian Portuguese gerund form (estou falando) and European Portuguese infinitive form (estou a falar).";
+---
+
+<BaseLayout title={title} description={description}>
+  <div class="tool-page">
+    <div class="container">
+      <nav class="breadcrumb">
+        <a href="/">Home</a> / 
+        <a href="/portuguese-variants/">Portuguese Variants</a> / 
+        <a href="/portuguese-variants/tools/">Tools</a> / 
+        <span>Progressive Converter</span>
+      </nav>
+
+      <header class="tool-header">
+        <h1>Progressive Tense Converter</h1>
+        <p class="tool-description">Convert between Brazilian gerund (falando) and European infinitive (a falar) constructions.</p>
+      </header>
+
+      <div class="converter-container">
+        <div class="direction-selector">
+          <button id="brToEp" class="direction-btn active">
+            <span class="from">Brazilian</span>
+            <span class="arrow">→</span>
+            <span class="to">European</span>
+          </button>
+          <button id="epToBr" class="direction-btn">
+            <span class="from">European</span>
+            <span class="arrow">→</span>
+            <span class="to">Brazilian</span>
+          </button>
+        </div>
+
+        <div class="input-section">
+          <label for="inputText">Enter your sentence:</label>
+          <textarea id="inputText" rows="3" placeholder="Example: Estou falando com meu amigo"></textarea>
+          <button id="convertBtn" class="convert-btn">Convert</button>
+        </div>
+
+        <div id="outputSection" class="output-section hidden">
+          <label>Converted sentence:</label>
+          <div id="outputText" class="output-box"></div>
+          <div class="explanation" id="explanation"></div>
+        </div>
+
+        <div class="examples-section">
+          <h3>Common Examples</h3>
+          <div class="examples-grid">
+            <div class="example-card">
+              <div class="br">Estou falando</div>
+              <div class="arrow">↔</div>
+              <div class="ep">Estou a falar</div>
+              <div class="en">I am speaking</div>
+            </div>
+            <div class="example-card">
+              <div class="br">Ela está comendo</div>
+              <div class="arrow">↔</div>
+              <div class="ep">Ela está a comer</div>
+              <div class="en">She is eating</div>
+            </div>
+            <div class="example-card">
+              <div class="br">Estamos trabalhando</div>
+              <div class="arrow">↔</div>
+              <div class="ep">Estamos a trabalhar</div>
+              <div class="en">We are working</div>
+            </div>
+            <div class="example-card">
+              <div class="br">Eles estão estudando</div>
+              <div class="arrow">↔</div>
+              <div class="ep">Eles estão a estudar</div>
+              <div class="en">They are studying</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="grammar-note">
+          <h4>Grammar Note</h4>
+          <p><strong>Brazilian Portuguese</strong> predominantly uses <em>estar</em> + gerund (-ndo form): <em>Estou falando</em>, <em>Está comendo</em>.</p>
+          <p><strong>European Portuguese</strong> predominantly uses <em>estar a</em> + infinitive: <em>Estou a falar</em>, <em>Está a comer</em>.</p>
+          <p>Both constructions exist in both variants, but with different frequencies and registers.</p>
+        </div>
+      </div>
+
+      <div class="tool-navigation">
+        <a href="/portuguese-variants/tools/" class="back-link">← Back to Tools</a>
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<script is:inline>
+  let currentDirection = 'brToEp';
+
+  function convertBrToEp(text) {
+    // Pattern: estar + gerund -> estar a + infinitive
+    // Matches: estou/está/estamos/estão/estava/estavam + gerundio
+    const pattern = /\b(estou|está|estamos|estão|estava|estavam|esteve|estiveram)\s+(\w+ndo)\b/gi;
+    
+    return text.replace(pattern, function(match, estar, gerund) {
+      // Convert gerund to infinitive
+      // Remove -ndo and handle irregular cases
+      let infinitive = gerund.slice(0, -3) + 'r';
+      
+      // Handle irregular gerunds
+      const irregularMap = {
+        'fazendo': 'fazer',
+        'dizendo': 'dizer',
+        'vindo': 'vir',
+        'pondo': 'pôr',
+        'saindo': 'sair',
+        'vendo': 'ver',
+        'trazendo': 'trazer'
+      };
+      
+      const lowerGerund = gerund.toLowerCase();
+      if (irregularMap[lowerGerund]) {
+        infinitive = irregularMap[lowerGerund];
+        // Preserve case
+        if (gerund[0] === gerund[0].toUpperCase()) {
+          infinitive = infinitive.charAt(0).toUpperCase() + infinitive.slice(1);
+        }
+      }
+      
+      return estar + ' a ' + infinitive;
+    });
+  }
+
+  function convertEpToBr(text) {
+    // Pattern: estar a + infinitive -> estar + gerund
+    const pattern = /\b(estou|está|estamos|estão|estava|estavam|esteve|estiveram)\s+a\s+(\w+r)\b/gi;
+    
+    return text.replace(pattern, function(match, estar, infinitive) {
+      // Convert infinitive to gerund
+      let gerund;
+      const lowerInf = infinitive.toLowerCase();
+      
+      // Handle irregular infinitives
+      const irregularMap = {
+        'fazer': 'fazendo',
+        'dizer': 'dizendo',
+        'vir': 'vindo',
+        'pôr': 'pondo',
+        'por': 'pondo',
+        'sair': 'saindo',
+        'ver': 'vendo',
+        'trazer': 'trazendo'
+      };
+      
+      if (irregularMap[lowerInf]) {
+        gerund = irregularMap[lowerInf];
+      } else {
+        // Regular conversion: remove -r, add -ndo
+        gerund = infinitive.slice(0, -1) + 'ndo';
+      }
+      
+      // Preserve case
+      if (infinitive[0] === infinitive[0].toUpperCase()) {
+        gerund = gerund.charAt(0).toUpperCase() + gerund.slice(1);
+      }
+      
+      return estar + ' ' + gerund;
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', function() {
+    const brToEpBtn = document.getElementById('brToEp');
+    const epToBrBtn = document.getElementById('epToBr');
+    const inputText = document.getElementById('inputText');
+    const convertBtn = document.getElementById('convertBtn');
+    const outputSection = document.getElementById('outputSection');
+    const outputText = document.getElementById('outputText');
+    const explanation = document.getElementById('explanation');
+
+    brToEpBtn.addEventListener('click', function() {
+      currentDirection = 'brToEp';
+      brToEpBtn.classList.add('active');
+      epToBrBtn.classList.remove('active');
+    });
+
+    epToBrBtn.addEventListener('click', function() {
+      currentDirection = 'epToBr';
+      epToBrBtn.classList.add('active');
+      brToEpBtn.classList.remove('active');
+    });
+
+    convertBtn.addEventListener('click', function() {
+      const text = inputText.value.trim();
+      if (!text) {
+        alert('Please enter a sentence to convert');
+        return;
+      }
+
+      let converted;
+      let explainText;
+
+      if (currentDirection === 'brToEp') {
+        converted = convertBrToEp(text);
+        explainText = 'Converted from Brazilian Portuguese (gerund) to European Portuguese (infinitive with "a")';
+      } else {
+        converted = convertEpToBr(text);
+        explainText = 'Converted from European Portuguese (infinitive with "a") to Brazilian Portuguese (gerund)';
+      }
+
+      outputText.textContent = converted;
+      explanation.textContent = explainText;
+      outputSection.classList.remove('hidden');
+    });
+  });
+</script>
+
+<style>
+  .tool-page { padding: 2rem 0 4rem; background: #f9fafb; min-height: calc(100vh - 200px); }
+  .container { max-width: 800px; margin: 0 auto; padding: 0 1.5rem; }
+  .breadcrumb { font-size: 0.875rem; color: #6b7280; margin-bottom: 1.5rem; }
+  .breadcrumb a { color: #004d40; text-decoration: none; }
+  .breadcrumb a:hover { text-decoration: underline; }
+  .tool-header { text-align: center; margin-bottom: 2rem; }
+  .tool-header h1 { font-size: 2rem; color: #111827; margin-bottom: 0.5rem; }
+  .tool-description { color: #6b7280; font-size: 1.125rem; }
+  .converter-container { background: white; border-radius: 0.75rem; padding: 2rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+  .direction-selector { display: flex; gap: 1rem; margin-bottom: 2rem; justify-content: center; }
+  .direction-btn { flex: 1; max-width: 250px; padding: 1rem; border: 2px solid #e5e7eb; background: white; border-radius: 0.5rem; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 0.25rem; transition: all 0.2s; }
+  .direction-btn .from { font-size: 0.875rem; color: #6b7280; }
+  .direction-btn .arrow { font-size: 1.25rem; color: #9ca3af; }
+  .direction-btn .to { font-weight: 600; color: #111827; }
+  .direction-btn.active { background: #004d40; border-color: #004d40; }
+  .direction-btn.active .from, .direction-btn.active .to { color: white; }
+  .direction-btn.active .arrow { color: rgba(255,255,255,0.7); }
+  .direction-btn:hover:not(.active) { border-color: #004d40; }
+  .input-section { margin-bottom: 1.5rem; }
+  .input-section label { display: block; font-weight: 600; color: #374151; margin-bottom: 0.5rem; }
+  .input-section textarea { width: 100%; padding: 1rem; border: 2px solid #e5e7eb; border-radius: 0.5rem; font-size: 1rem; font-family: inherit; resize: vertical; }
+  .input-section textarea:focus { outline: none; border-color: #004d40; }
+  .convert-btn { display: block; width: 100%; margin-top: 1rem; padding: 1rem; background: #004d40; color: white; border: none; border-radius: 0.5rem; font-size: 1.125rem; font-weight: 600; cursor: pointer; transition: background 0.2s; }
+  .convert-btn:hover { background: #00695c; }
+  .output-section { margin-bottom: 2rem; }
+  .output-section label { display: block; font-weight: 600; color: #374151; margin-bottom: 0.5rem; }
+  .output-box { padding: 1rem; background: #ecfdf5; border: 2px solid #004d40; border-radius: 0.5rem; font-size: 1.125rem; color: #111827; min-height: 60px; }
+  .explanation { margin-top: 0.75rem; padding: 0.75rem; background: #f3f4f6; border-radius: 0.375rem; font-size: 0.875rem; color: #6b7280; }
+  .hidden { display: none; }
+  .examples-section { margin-top: 2rem; padding-top: 2rem; border-top: 2px solid #e5e7eb; }
+  .examples-section h3 { font-size: 1.25rem; color: #111827; margin-bottom: 1rem; }
+  .examples-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem; }
+  .example-card { padding: 1rem; background: #f9fafb; border-radius: 0.5rem; text-align: center; }
+  .example-card .br { font-weight: 600; color: #004d40; }
+  .example-card .ep { font-weight: 600; color: #00695c; }
+  .example-card .arrow { color: #9ca3af; margin: 0.25rem 0; }
+  .example-card .en { font-size: 0.875rem; color: #6b7280; margin-top: 0.5rem; font-style: italic; }
+  .grammar-note { margin-top: 2rem; padding: 1.5rem; background: #f0fdfa; border-radius: 0.5rem; border-left: 4px solid #004d40; }
+  .grammar-note h4 { font-size: 1.125rem; color: #111827; margin-bottom: 0.75rem; }
+  .grammar-note p { color: #374151; margin-bottom: 0.5rem; line-height: 1.6; }
+  .tool-navigation { margin-top: 2rem; text-align: center; }
+  .back-link { color: #004d40; text-decoration: none; font-weight: 500; }
+  .back-link:hover { text-decoration: underline; }
+  @media (max-width: 640px) {
+    .direction-selector { flex-direction: column; align-items: center; }
+    .direction-btn { width: 100%; max-width: none; }
+    .examples-grid { grid-template-columns: 1fr; }
+  }
+</style>
